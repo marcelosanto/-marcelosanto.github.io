@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  
+  <meta name="description" content="Um pouco de Tudo porAqui..." />
+  
+  
+
+  <title>
+    
+    Rust e Iteradores: Descomplicando o Poder da Iteração em Alta Performance
+    
+</title>
+
+  
+
+  
+  <link rel="stylesheet" href="https://marcelosanto.github.io/site.css">
+  
+
+  
+  
+</head>
+
+<body class="hack dark main container">
+  
+    
+        
+  
+  <header class="nav-header">
+    <nav itemscope itemtype="http://schema.org/SiteNavigationElement" class="navbar">
+      <div class="nav-links">
+        
+        <a itemprop="url"
+          class=""
+          href="https://marcelosanto.github.io">
+          <span itemprop="name">Home</span></a>
+        
+        <a itemprop="url"
+          class=""
+          href="https://marcelosanto.github.io/categories">
+          <span itemprop="name">Categories</span></a>
+        
+        <a itemprop="url"
+          class=""
+          href="https://marcelosanto.github.io/tags">
+          <span itemprop="name">Tags</span></a>
+        
+      </div>
+    </nav>
+    
+    <div class="search-container">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="search-icon">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input type="text" id="search" placeholder="Search...">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+    
+
+  </header>
+  
+  
+    
+
+<article itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">Rust e Iteradores: Descomplicando o Poder da Iteração em Alta Performance</h1>
+        <span class="muted">
+    <svg class="icon i-clock" viewBox="0 0 32 32"
+         width="16" height="16" fill="none" stroke="currentcolor"
+         stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
+        <circle cx="16" cy="16" r="14"/>
+        <path d="M16 8 L16 16 20 20"/>
+    </svg>
+    <span>3 minute read</span>
+    <svg class="icon i-edit" viewBox="0 0 32 32"
+         width="16" height="16" fill="none" stroke="currentcolor"
+         stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
+        <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"/>
+    </svg>
+
+    Published: 2022-11-19
+</span>
+    </header>
+    <div itemprop="articleBody">
+      <p>Rust é uma linguagem conhecida por sua segurança, desempenho e expressividade. Uma de suas características mais poderosas é o sistema de <strong>iteradores</strong>, que permite processar coleções de dados de maneira eficiente e declarativa. Neste artigo, vamos explorar o que são iteradores, como usá-los em Rust e como eles podem ser aplicados para resolver problemas comuns de programação.</p>
+<span id="continue-reading"></span><h3 id="o-que-sao-iteradores">O Que São Iteradores?</h3>
+<p>Iteradores são objetos que permitem percorrer uma sequência de elementos, um de cada vez. Em Rust, eles são representados pelo tipo <strong><code>Iterator</code></strong>, que fornece uma API robusta para manipular coleções sem a necessidade de escrever laços explícitos. O grande diferencial está no foco em <strong>lazy evaluation</strong>, o que significa que as operações de um iterador são executadas apenas quando necessário.</p>
+<p>Um exemplo simples de iterador:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> numeros </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">vec![</span><span style="color:#db9d63;">1</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">3</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">4</span><span style="color:#abb2bf;">]; </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> iterador </span><span style="color:#adb7c9;">=</span><span style="color:#abb2bf;"> numeros.</span><span style="color:#5ebfcc;">iter</span><span style="color:#abb2bf;">(); </span><span style="font-style:italic;color:#5f697a;">// Cria um iterador
+</span><span style="color:#cd74e8;">for</span><span style="color:#abb2bf;"> numero </span><span style="color:#adb7c9;">in</span><span style="color:#abb2bf;"> iterador { println!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, numero); }
+</span></code></pre>
+<h3 id="como-iteradores-funcionam">Como Iteradores Funcionam?</h3>
+<p>Rust fornece dois métodos principais para criar e consumir iteradores:</p>
+<ol>
+<li><strong><code>iter()</code></strong>: Cria um iterador que empresta os valores da coleção.</li>
+<li><strong><code>into_iter()</code></strong>: Consome a coleção e transforma os valores em propriedade do iterador.</li>
+<li><strong><code>iter_mut()</code></strong>: Cria um iterador mutável, permitindo alterar os valores da coleção.</li>
+</ol>
+<p>Exemplo de uso de <code>iter_mut</code>:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">let mut</span><span style="color:#abb2bf;"> numeros </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">vec![</span><span style="color:#db9d63;">1</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">3</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">4</span><span style="color:#abb2bf;">];
+</span><span style="color:#cd74e8;">for</span><span style="color:#abb2bf;"> numero </span><span style="color:#adb7c9;">in</span><span style="color:#abb2bf;"> numeros.</span><span style="color:#5ebfcc;">iter_mut</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">    </span><span style="color:#adb7c9;">*</span><span style="color:#abb2bf;">numero </span><span style="color:#adb7c9;">*= </span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">; </span><span style="font-style:italic;color:#5f697a;">// Dobra o valor de cada número
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">println!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{:?}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, numeros); </span><span style="font-style:italic;color:#5f697a;">// [2, 4, 6, 8]
+</span></code></pre>
+<h3 id="metodos-comuns-de-iteradores">Métodos Comuns de Iteradores</h3>
+<p>Rust oferece uma ampla variedade de métodos para manipular iteradores. Aqui estão os mais populares:</p>
+<ul>
+<li><strong><code>map</code></strong>: Transforma os elementos de um iterador.</li>
+<li><strong><code>filter</code></strong>: Seleciona elementos que satisfazem uma condição.</li>
+<li><strong><code>collect</code></strong>: Converte um iterador em uma coleção.</li>
+<li><strong><code>fold</code></strong>: Reduz os elementos do iterador a um único valor.</li>
+</ul>
+<p>Exemplo combinando <code>map</code> e <code>filter</code>:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> numeros </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">vec![</span><span style="color:#db9d63;">1</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">3</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">4</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">5</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">6</span><span style="color:#abb2bf;">];
+</span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> resultado: Vec&lt;</span><span style="color:#adb7c9;">_</span><span style="color:#abb2bf;">&gt; </span><span style="color:#adb7c9;">=</span><span style="color:#abb2bf;"> numeros
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">iter</span><span style="color:#abb2bf;">()
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">map</span><span style="color:#abb2bf;">(|</span><span style="color:#eb6772;">x</span><span style="color:#abb2bf;">| x </span><span style="color:#adb7c9;">*</span><span style="color:#abb2bf;"> x) </span><span style="font-style:italic;color:#5f697a;">// Eleva ao quadrado
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">filter</span><span style="color:#abb2bf;">(|</span><span style="color:#eb6772;">x</span><span style="color:#abb2bf;">| x </span><span style="color:#adb7c9;">% </span><span style="color:#db9d63;">2 </span><span style="color:#adb7c9;">== </span><span style="color:#db9d63;">0</span><span style="color:#abb2bf;">) </span><span style="font-style:italic;color:#5f697a;">// Mantém apenas os pares
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">collect</span><span style="color:#abb2bf;">();
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">println!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{:?}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, resultado); </span><span style="font-style:italic;color:#5f697a;">// [4, 16, 36]
+</span></code></pre>
+<h3 id="iteradores-e-performance">Iteradores e Performance</h3>
+<p>Uma das vantagens do sistema de iteradores de Rust é que ele combina <strong>lazy evaluation</strong> com otimizações do compilador, gerando código altamente eficiente. Operações encadeadas, como <code>map</code> e <code>filter</code>, não criam coleções intermediárias; em vez disso, o Rust as processa como uma única operação.</p>
+<h3 id="criando-seu-proprio-iterador">Criando Seu Próprio Iterador</h3>
+<p>Você também pode criar iteradores personalizados implementando o trait <strong><code>Iterator</code></strong>. Um exemplo simples é um iterador que gera números pares:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">struct </span><span style="color:#abb2bf;">Pares {
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">atual</span><span style="color:#abb2bf;">: </span><span style="color:#cd74e8;">u32</span><span style="color:#abb2bf;">,
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">impl </span><span style="color:#abb2bf;">Iterator </span><span style="color:#cd74e8;">for </span><span style="color:#abb2bf;">Pares {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">type </span><span style="color:#abb2bf;">Item </span><span style="color:#adb7c9;">= </span><span style="color:#cd74e8;">u32</span><span style="color:#abb2bf;">;
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">next</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">mut </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">) -&gt; Option&lt;</span><span style="color:#cd74e8;">Self::</span><span style="color:#abb2bf;">Item&gt; {
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">.atual </span><span style="color:#adb7c9;">+= </span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">;
+</span><span style="color:#abb2bf;">        Some(</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">.atual)
+</span><span style="color:#abb2bf;">    }
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">main</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let mut</span><span style="color:#abb2bf;"> pares </span><span style="color:#adb7c9;">=</span><span style="color:#abb2bf;"> Pares { atual: </span><span style="color:#db9d63;">0 </span><span style="color:#abb2bf;">};
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">for</span><span style="color:#abb2bf;"> numero </span><span style="color:#adb7c9;">in</span><span style="color:#abb2bf;"> pares.</span><span style="color:#5ebfcc;">take</span><span style="color:#abb2bf;">(</span><span style="color:#db9d63;">5</span><span style="color:#abb2bf;">) {
+</span><span style="color:#abb2bf;">        println!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, numero);
+</span><span style="color:#abb2bf;">    }
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
+<h3 id="iteradores-x-lacos">Iteradores x Laços</h3>
+<p>Embora você possa usar laços como <code>for</code> e <code>while</code>, iteradores são uma alternativa mais declarativa e menos propensa a erros. Além disso, eles permitem compor operações de maneira elegante, tornando o código mais legível e expressivo.</p>
+<p>Exemplo com laço tradicional:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> numeros </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">vec![</span><span style="color:#db9d63;">1</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">3</span><span style="color:#abb2bf;">];
+</span><span style="color:#cd74e8;">let mut</span><span style="color:#abb2bf;"> soma </span><span style="color:#adb7c9;">= </span><span style="color:#db9d63;">0</span><span style="color:#abb2bf;">;
+</span><span style="color:#cd74e8;">for</span><span style="color:#abb2bf;"> numero </span><span style="color:#adb7c9;">in &amp;</span><span style="color:#abb2bf;">numeros {
+</span><span style="color:#abb2bf;">    soma </span><span style="color:#adb7c9;">+=</span><span style="color:#abb2bf;"> numero;
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">println!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, soma);
+</span></code></pre>
+<p>Equivalente com <code>Iterator</code>:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> numeros </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">vec![</span><span style="color:#db9d63;">1</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">, </span><span style="color:#db9d63;">3</span><span style="color:#abb2bf;">];
+</span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> soma: </span><span style="color:#cd74e8;">i32 </span><span style="color:#adb7c9;">=</span><span style="color:#abb2bf;"> numeros.</span><span style="color:#5ebfcc;">iter</span><span style="color:#abb2bf;">().</span><span style="color:#5ebfcc;">sum</span><span style="color:#abb2bf;">();
+</span><span style="color:#abb2bf;">println!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, soma);
+</span></code></pre>
+<h3 id="conclusao">Conclusão</h3>
+<p>Os iteradores são uma das ferramentas mais poderosas do ecossistema Rust. Eles permitem manipular coleções com elegância, eficiência e segurança, aproveitando ao máximo os recursos da linguagem. Seja você iniciante ou experiente em Rust, explorar o sistema de iteradores é um passo essencial para escrever código mais idiomático e performático.</p>
+
+    </div>
+
+    
+        <footer>
+            <hr>
+            <p>
+                
+                    Published by Marcelo Santos
+                
+                
+                    
+                    in <a href="https://marcelosanto.github.io/categories/code/">code</a>
+                
+                
+                    and
+                    tagged
+                    
+                        <a href="https://marcelosanto.github.io/tags/code/">code</a>
+                        
+                            
+                                
+                                    and
+                                
+                            
+                        
+                    
+                        <a href="https://marcelosanto.github.io/tags/rust/">rust</a>
+                        
+                            
+                        
+                    
+                
+            </p>
+            
+            
+        </footer>
+    
+</article>
+
+
+
+  <!-- optional scripts -->
+  
+  
+  <script src="https://marcelosanto.github.io/js/codeblock.js"></script>
+  
+
+  
+<!-- MathJax script for rendering LaTeX math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [
+        ["$", "$"],
+        ["\\(", "\\)"],
+      ],
+      displayMath: [
+        ["$$", "$$"],
+        ["\\[", "\\]"],
+      ],
+    },
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+
+  
+<script type="text/javascript" src="https://marcelosanto.github.io/elasticlunr.min.js"></script>
+<script type="text/javascript" src="https://marcelosanto.github.io/js/search.js"></script>
+
+
+  
+</body>
+
+</html>

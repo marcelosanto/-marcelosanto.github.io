@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://marcelosanto.github.io/</loc>
+    </url>
+    <url>
+        <loc>https://marcelosanto.github.io/categories/</loc>
+    </url>
+    <url>
+        <loc>https://marcelosanto.github.io/categories/code/</loc>
+    </url>
+    <url>
+        <loc>https://marcelosanto.github.io/comparando-variaveis/</loc>
+        <lastmod>2024-11-04</lastmod>
+    </url>
+    <url>
+        <loc>https://marcelosanto.github.io/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://marcelosanto.github.io/rust-interadores/</loc>
+        <lastmod>2022-11-19</lastmod>
+    </url>
+    <url>
+        <loc>https://marcelosanto.github.io/tags/</loc>
+    </url>
+    <url>
+        <loc>https://marcelosanto.github.io/tags/code/</loc>
+    </url>
+    <url>
+        <loc>https://marcelosanto.github.io/tags/rust/</loc>
+    </url>
+</urlset>
